@@ -39,6 +39,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/fondo3">
 
+
             <Button
                 android:id="@+id/btnUp"
                 android:layout_width="80dp"

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.devst.proyecto_aplicacin.DB.DbManager;
-import com.devst.proyecto_aplicacin.DB.Usuario;
+import com.devst.proyecto_aplicacin.DB.Modelo.Usuario;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;

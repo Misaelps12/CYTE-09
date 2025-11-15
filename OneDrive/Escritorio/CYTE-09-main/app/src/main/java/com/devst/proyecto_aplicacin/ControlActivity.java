@@ -1,16 +1,20 @@
 package com.devst.proyecto_aplicacin;
 
 import android.Manifest;
-import android.app.AlertDialog; // Importante para el menú
+
+import android.app.AlertDialog;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
+
 import android.content.pm.PackageManager;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -24,6 +28,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
+
+
 
 public class ControlActivity extends AppCompatActivity {
 

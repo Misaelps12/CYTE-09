@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 // --  Clases del paquete de base de datos
 import com.devst.proyecto_aplicacin.DB.DbManager;
-import com.devst.proyecto_aplicacin.DB.Usuario;
+import com.devst.proyecto_aplicacin.DB.Modelo.Usuario;
 
 // -- Librerías de seguridad para hashear contraseñas
 import java.security.MessageDigest;

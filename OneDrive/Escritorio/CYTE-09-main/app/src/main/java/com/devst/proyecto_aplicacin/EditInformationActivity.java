@@ -3,7 +3,6 @@ package com.devst.proyecto_aplicacin;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -13,14 +12,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.devst.proyecto_aplicacin.DB.DbManager;
-import com.devst.proyecto_aplicacin.DB.Usuario;
+import com.devst.proyecto_aplicacin.DB.Modelo.Usuario;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 /**
  * Activity para permitir al usuario ver y modificar su información de perfil.

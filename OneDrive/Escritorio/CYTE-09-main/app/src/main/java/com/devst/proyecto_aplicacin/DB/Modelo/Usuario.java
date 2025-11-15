@@ -1,4 +1,4 @@
-package com.devst.proyecto_aplicacin.DB;
+package com.devst.proyecto_aplicacin.DB.Modelo;
 
 public class Usuario {
 
@@ -13,7 +13,7 @@ public class Usuario {
     public Usuario() {
     }
 
-   // -- Constructor
+    // -- Constructor para CREAR un usuario (sin ID)
     public Usuario(String nombre, String apellido, String telefono, String correo, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -23,7 +23,8 @@ public class Usuario {
     }
 
     // -- Constructor para LEER un usuario desde la BD (con ID)
-    public Usuario(int id, String nombre, String apellido, String telefono, String correo, String contrasena) {
+    // CORREGIDO: El último parámetro era 'contrasena' pero debe ser 'password'
+    public Usuario(int id, String nombre, String apellido, String telefono, String correo, String password) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;

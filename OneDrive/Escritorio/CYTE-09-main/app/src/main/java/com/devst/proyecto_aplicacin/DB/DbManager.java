@@ -6,10 +6,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.devst.proyecto_aplicacin.DB.Modelo.Patrones; // <-- IMPORTAR MODELO PATRONES
+import com.devst.proyecto_aplicacin.DB.Modelo.Usuario;
+
+import java.util.ArrayList; // <-- IMPORTAR ARRAYLIST
 
 /**
  * Es la capa intermedia entre la aplicación y la base de datos.
- * Se encarga de insertar, buscar, validar y eliminar usuarios.
+ * Se encarga de insertar, buscar, validar y eliminar usuarios Y patrones.
  */
 public class DbManager {
 
@@ -21,6 +25,10 @@ public class DbManager {
         // -- Crea una instancia de DbConexion
         this.dbConexion = new DbConexion(context);
     }
+
+    // ===========================================
+    // --- MÉTODOS PARA LA TABLA "USUARIOS" ---
+    // ===========================================
 
     // -- Metodo para insertar un usuario en la base de datos
     public long insertarUsuario(Usuario usuario) {
@@ -91,6 +99,7 @@ public class DbManager {
             db = dbConexion.getReadableDatabase();
 
             String[] projection = {
+                    DbConexion.COLUMN_ID, // <-- Faltaba el ID
                     DbConexion.COLUMN_NOMBRE,
                     DbConexion.COLUMN_APELLIDO,
                     DbConexion.COLUMN_TELEFONO,
@@ -112,13 +121,15 @@ public class DbManager {
             );
 
             if (cursor.moveToFirst()) {
+                int id = cursor.getInt(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_ID));
                 String nombre = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_NOMBRE));
                 String apellido = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_APELLIDO));
                 String telefono = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_TELEFONO));
                 String correo = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_EMAIL));
                 String passwordHash = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_PASSWORD));
 
-                usuario = new Usuario(nombre, apellido, telefono, correo, passwordHash);
+                // Usamos el constructor que incluye el ID
+                usuario = new Usuario(id, nombre, apellido, telefono, correo, passwordHash);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -136,22 +147,15 @@ public class DbManager {
     // -- Metodo para eliminar un usuario verificando correo y contraseña
     public int eliminarUsuario(String email, String contrasena) {
 
-        // Devuelve el número de filas eliminadas (1 si tuvo éxito, 0 si falló)
         int filasEliminadas = 0;
         SQLiteDatabase db = null;
 
         try {
-            // Abre la base de datos en modo escritura para la operación DELETE
             db = dbConexion.getWritableDatabase();
-
-            // Cláusula WHERE para asegurar que solo se elimine el usuario con las credenciales correctas
             String whereClause = DbConexion.COLUMN_EMAIL + " = ? AND " +
                     DbConexion.COLUMN_PASSWORD + " = ?";
-
-            // Los argumentos de la cláusula WHERE
             String[] whereArgs = {email, contrasena};
 
-            // Ejecuta la eliminación y obtiene el número de filas afectadas
             filasEliminadas = db.delete(
                     DbConexion.TABLE_USUARIOS,
                     whereClause,
@@ -160,9 +164,8 @@ public class DbManager {
 
         } catch (Exception e) {
             Log.e("DbManager", "Error al eliminar usuario", e);
-            filasEliminadas = 0; // Se asegura que el retorno sea 0 en caso de error
+            filasEliminadas = 0;
         } finally {
-            // Cierra la base de datos
             if (db != null) {
                 db.close();
             }
@@ -170,31 +173,24 @@ public class DbManager {
         return filasEliminadas;
     }
 
-    public boolean actualizarInformacion (Usuario usuario) {
-
-        // -- Abrimos la base de datos en modo escritura
+    public boolean actualizarInformacion(Usuario usuario) {
         SQLiteDatabase db = dbConexion.getWritableDatabase();
-
         int filasActualizadas = 0;
 
-        try{
-            // -- Preparamos los valores a actualizar
+        try {
             ContentValues values = new ContentValues();
             values.put(DbConexion.COLUMN_NOMBRE, usuario.getNombre());
             values.put(DbConexion.COLUMN_APELLIDO, usuario.getApellido());
             values.put(DbConexion.COLUMN_TELEFONO, usuario.getTelefono());
 
-            // -- Definimos la clausula where
-
             String whereClause = DbConexion.COLUMN_EMAIL + " = ?";
             String[] whereArgs = {usuario.getCorreo()};
 
-            // -- Ejecutamos el update.
             filasActualizadas = db.update(
-                    DbConexion.TABLE_USUARIOS, // La tabla
-                    values,                    // Los nuevos valores
-                    whereClause,               // La cláusula WHERE
-                    whereArgs                  // Los argumentos para el WHERE
+                    DbConexion.TABLE_USUARIOS,
+                    values,
+                    whereClause,
+                    whereArgs
             );
         } catch (Exception e) {
             Log.e("DbManager", "Error al actualizar usuario", e);
@@ -203,16 +199,16 @@ public class DbManager {
                 db.close();
             }
         }
-        return false;
+        // --- ¡CORREGIDO! ---
+        return filasActualizadas > 0; // Devuelve true si se actualizó al menos 1 fila
     }
-    // En DbManager.java
+
     public boolean actualizarPassword(String email, String hashedPassword) {
         SQLiteDatabase db = dbConexion.getWritableDatabase();
         int filasActualizadas = 0;
 
         try {
             ContentValues values = new ContentValues();
-            // Solo actualizamos la columna de la contraseña con el nuevo hash
             values.put(DbConexion.COLUMN_PASSWORD, hashedPassword);
 
             String whereClause = DbConexion.COLUMN_EMAIL + " = ?";
@@ -232,5 +228,106 @@ public class DbManager {
             }
         }
         return filasActualizadas > 0;
+    }
+
+
+    // ===========================================
+    // --- MÉTODOS NUEVOS PARA "PATRONES" ---
+    // ===========================================
+
+    /**
+     * Inserta un nuevo patrón en la base de datos.
+     * @param patron El objeto Patrones con la info (A, B, C, D).
+     * @return El ID de la nueva fila, o -1 si hubo un error.
+     */
+    public long insertarPatron(Patrones patron) {
+        long nuevoId = -1;
+        SQLiteDatabase db = dbConexion.getWritableDatabase();
+
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DbConexion.COLUMN_A, patron.getA());
+            values.put(DbConexion.COLUMN_B, patron.getB());
+            values.put(DbConexion.COLUMN_C, patron.getC());
+            values.put(DbConexion.COLUMN_D, patron.getD());
+
+            nuevoId = db.insert(DbConexion.TABLE_PATRONES, null, values);
+        } catch (Exception e) {
+            Log.e("DbManager", "Error al insertar patrón", e);
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return nuevoId;
+    }
+
+    /**
+     * Obtiene todos los patrones guardados en la base de datos.
+     * @return Una lista (ArrayList) de objetos Patrones.
+     */
+    public ArrayList<Patrones> getAllPatrones() {
+        ArrayList<Patrones> listaPatrones = new ArrayList<>();
+        SQLiteDatabase db = dbConexion.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            // null en projection significa "traer todas las columnas (*)"
+            cursor = db.query(
+                    DbConexion.TABLE_PATRONES,
+                    null, null, null, null, null, null
+            );
+
+            if (cursor.moveToFirst()) {
+                do {
+                    int id = cursor.getInt(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_ID_PATRONES));
+                    String a = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_A));
+                    String b = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_B));
+                    String c = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_C));
+                    String d = cursor.getString(cursor.getColumnIndexOrThrow(DbConexion.COLUMN_D));
+
+                    Patrones patron = new Patrones(id, a, b, c, d);
+                    listaPatrones.add(patron);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            Log.e("DbManager", "Error al leer todos los patrones", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return listaPatrones;
+    }
+
+    /**
+     * Elimina un patrón usando su ID.
+     * @param id El id del patrón a eliminar (id_patron).
+     * @return El número de filas eliminadas (debería ser 1).
+     */
+    public int eliminarPatron(int id) {
+        int filasEliminadas = 0;
+        SQLiteDatabase db = dbConexion.getWritableDatabase();
+
+        try {
+            String whereClause = DbConexion.COLUMN_ID_PATRONES + " = ?";
+            String[] whereArgs = {String.valueOf(id)};
+
+            filasEliminadas = db.delete(
+                    DbConexion.TABLE_PATRONES,
+                    whereClause,
+                    whereArgs
+            );
+        } catch (Exception e) {
+            Log.e("DbManager", "Error al eliminar patrón", e);
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return filasEliminadas;
     }
 }

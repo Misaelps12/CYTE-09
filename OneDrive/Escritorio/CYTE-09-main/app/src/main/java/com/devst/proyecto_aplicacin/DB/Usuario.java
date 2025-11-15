@@ -9,11 +9,11 @@ public class Usuario {
     private String correo;
     private String password;
 
-    // Constructor Vacío
+    // -- Constructor Vacío
     public Usuario() {
     }
 
-   //Constructor
+   // -- Constructor
     public Usuario(String nombre, String apellido, String telefono, String correo, String password) {
         this.nombre = nombre;
         this.apellido = apellido;
@@ -22,7 +22,7 @@ public class Usuario {
         this.password = password;
     }
 
-    // Constructor para LEER un usuario desde la BD (con ID)
+    // -- Constructor para LEER un usuario desde la BD (con ID)
     public Usuario(int id, String nombre, String apellido, String telefono, String correo, String contrasena) {
         this.id = id;
         this.nombre = nombre;

@@ -108,7 +108,6 @@ public class DeleteActivity extends AppCompatActivity {
 
             finish();
         } else {
-            // Falla porque las credenciales (hash) no coincidieron o el usuario no existe.
             Toast.makeText(this, "Error al eliminar la cuenta. Credenciales no válidas.", Toast.LENGTH_LONG).show();
         }
     }
@@ -116,7 +115,7 @@ public class DeleteActivity extends AppCompatActivity {
     private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            // Usar UTF_8 garantiza la consistencia del hash con el registro
+            // -- Usar UTF_8 garantiza la consistencia del hash con el registro
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
 
             StringBuilder hexString = new StringBuilder();
@@ -127,11 +126,11 @@ public class DeleteActivity extends AppCompatActivity {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            // Este error ocurre si el algoritmo (SHA-256) no es compatible (muy raro en Android)
+            // -- Este error ocurre si el algoritmo (SHA-256) no es compatible (muy raro en Android)
             e.printStackTrace();
             return null;
         } catch (Exception e) {
-            // Manejar otros posibles errores de codificación
+            //--  Manejar otros posibles errores de codificación
             e.printStackTrace();
             return null;
         }

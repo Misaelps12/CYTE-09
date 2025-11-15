@@ -46,17 +46,17 @@ public class EditInformationActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_information);
 
-        // 1. Inicializa el administrador de base de datos
+        // -- Inicializa el administrador de base de datos
         dbManager = new DbManager(this);
 
-        // 2. Configura los Insets del sistema
+        // -- Configura los Insets del sistema
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // 3. Obtiene el email del usuario logueado desde el Intent
+        // -- Obtiene el email del usuario logueado desde el Intent
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_USER_EMAIL)) {
             currentEmail = intent.getStringExtra(EXTRA_USER_EMAIL);
@@ -70,7 +70,7 @@ public class EditInformationActivity extends AppCompatActivity {
             return;
         }
 
-        // 4. Vincula las variables con los IDs de las vistas
+        // -- Vincula las variables con los IDs de las vistas
         etNombre = findViewById(R.id.etNombre);
         etApellido = findViewById(R.id.etApellido);
         etTelefono = findViewById(R.id.etTelefono);
@@ -80,10 +80,10 @@ public class EditInformationActivity extends AppCompatActivity {
         btnAceptar = findViewById(R.id.btnAceptar);
         tilConfirmPassword = findViewById(R.id.textInputLayoutConfirmPassword);
 
-        // 5. Carga los datos del usuario actual
+        // -- Carga los datos del usuario actual
         cargarDatosUsuario(currentEmail);
 
-        // 6. Configura el Listener del botón Aceptar
+        // -- Configura el Listener del botón Aceptar
         btnAceptar.setOnClickListener(v -> guardarCambios());
     }
 
@@ -117,7 +117,7 @@ public class EditInformationActivity extends AppCompatActivity {
         String nuevaContrasena = etPassword.getText().toString().trim();
         String confirmarContrasena = etConfirmPassword.getText().toString().trim();
 
-        // 1. Validaciones básicas
+        // -- Validaciones básicas
         if (nuevoNombre.isEmpty() || nuevoApellido.isEmpty() || nuevoTelefono.isEmpty()) {
             Toast.makeText(this, "Complete todos los campos de información personal.", Toast.LENGTH_SHORT).show();
             return;
@@ -125,7 +125,7 @@ public class EditInformationActivity extends AppCompatActivity {
 
         boolean huboCambios = false;
 
-        // 2. Actualización de Contraseña (si aplica)
+        // -- Actualización de Contraseña (si aplica)
         if (!nuevaContrasena.isEmpty() || !confirmarContrasena.isEmpty()) {
             if (!nuevaContrasena.equals(confirmarContrasena)) {
                 tilConfirmPassword.setError("Las contraseñas no coinciden.");
@@ -142,7 +142,7 @@ public class EditInformationActivity extends AppCompatActivity {
             }
         }
 
-        // 3. Actualización de Información Personal
+        // -- Actualización de Información Personal
         Usuario usuarioActualizado = new Usuario();
         usuarioActualizado.setNombre(nuevoNombre);
         usuarioActualizado.setApellido(nuevoApellido);
@@ -153,7 +153,7 @@ public class EditInformationActivity extends AppCompatActivity {
             huboCambios = true;
         }
 
-        // 4. Resultado Final
+        // -- Resultado Final
         if (huboCambios) {
             Toast.makeText(this, "✅ Información actualizada con éxito.", Toast.LENGTH_SHORT).show();
             finish(); // Vuelve al menú

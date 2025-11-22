@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "332112837052",
+    "project_id": "cyte-09-e1dc8",
+    "storage_bucket": "cyte-09-e1dc8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332112837052:android:ff47281df1f7d1cefd93b9",
+        "android_client_info": {
+          "package_name": "com.cyte_09.ctye_09"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA-hdMYjjTwGraGcpDxZZwQzg9vBFhcLc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

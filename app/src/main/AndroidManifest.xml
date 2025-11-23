@@ -17,6 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CTYE09">
+
+        <activity
+            android:name=".ui.PatronesActivity"
+            android:exported="false" />
         <activity
             android:name=".ui.EditInformationActivity"
             android:exported="false" />

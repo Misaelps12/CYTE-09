@@ -1,10 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/img_fondo"
+    android:padding="16dp"
     tools:context=".ui.ControlActivity">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/txtTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Panel de Control"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:padding="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Botón conectar Bluetooth -->
+    <Button
+        android:id="@+id/btnConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="🔍 Conectar HC-05"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
+        app:layout_constraintTop_toBottomOf="@id/txtTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Panel de control direccional -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardControl"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="12dp"
+        app:layout_constraintTop_toBottomOf="@id/btnConnect"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cardGiro">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_fondo_control"
+            android:padding="16dp">
+
+            <!-- Flechas de movimiento -->
+            <Button
+                android:id="@+id/btnUp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:backgroundTint="#00BCD4"
+                android:text="↑"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"/>
+
+            <Button
+                android:id="@+id/btnLeft"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@id/btnUp"
+                android:layout_marginTop="16dp"
+                android:layout_toStartOf="@id/btnUp"
+                android:backgroundTint="#00BCD4"
+                android:text="←"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"/>
+
+            <Button
+                android:id="@+id/btnRight"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@id/btnUp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/btnUp"
+                android:backgroundTint="#00BCD4"
+                android:text="→"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"/>
+
+            <Button
+                android:id="@+id/btnDown"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_below="@id/btnLeft"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#00BCD4"
+                android:text="↓"
+                android:textColor="#FFFFFF"
+                android:textSize="32sp"/>
+
+            <!-- Centro -->
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Botones para girar la araña -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardGiro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="12dp"
+        app:layout_constraintTop_toBottomOf="@id/cardControl"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:padding="16dp"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/btnTurnLeft"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="80dp"
+                android:text="Girar Izquierda"
+                android:backgroundTint="#03A9F4"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"/>
+
+            <Button
+                android:id="@+id/btnTurnRight"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="80dp"
+                android:text="Girar Derecha"
+                android:backgroundTint="#E91E63"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

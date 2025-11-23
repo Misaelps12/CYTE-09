@@ -1,82 +1,90 @@
 package com.cyte_09.ctye_09.ui;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.graphics.Insets;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.cyte_09.ctye_09.R;
+import com.cyte_09.ctye_09.data.db.DbManager;
+import com.cyte_09.ctye_09.data.modelo.Usuario;
 
 public class MenuActivity extends AppCompatActivity {
 
     public static final String EXTRA_USER_EMAIL = "USER_EMAIL";
 
     private String emailUsuarioLogueado;
-
-    private CardView cardControl;
-    private CardView cardPatrones;
-    private CardView cardInfo;
-    private CardView cardInfoUsuario;
+    private DbManager dbManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // --- Activar Edge-to-Edge
         setContentView(R.layout.activity_menu);
+
+        // -- Edge to edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // --- Obtener email del usuario registrado
+        dbManager = new DbManager(this);
+
+        // -- Obtener email del usuario
         emailUsuarioLogueado = getIntent().getStringExtra(EXTRA_USER_EMAIL);
 
         if (emailUsuarioLogueado == null || emailUsuarioLogueado.isEmpty()) {
             Toast.makeText(this, "⚠️ ERROR: No se recibió el email del usuario.", Toast.LENGTH_LONG).show();
             Log.e("MENU_DEBUG", "Email es NULO");
+            return;
         } else {
             Log.d("MENU_DEBUG", "Email recibido correctamente: " + emailUsuarioLogueado);
         }
 
-        // --- Referencias a los CardViews
-        cardControl = findViewById(R.id.cardControl);
-        cardPatrones = findViewById(R.id.cardPatrones);
-        cardInfo = findViewById(R.id.cardInfo);
-        cardInfoUsuario = findViewById(R.id.cardInfoUsuario);
+        // -- Obtener información del usuario desde SQLite
+        Usuario usuario = dbManager.getUsuarioPorEmail(emailUsuarioLogueado);
 
-        // --- Listeners
-        cardControl.setOnClickListener(view -> {
+        if (usuario == null) {
+            Toast.makeText(this, "Usuario no encontrado en la base de datos", Toast.LENGTH_LONG).show();
+        }
+
+        // -- Referencias de las cards
+        CardView cardControl = findViewById(R.id.cardControl);
+        CardView cardPatrones = findViewById(R.id.cardPatrones);
+        CardView cardInfo = findViewById(R.id.cardInfo);
+        CardView cardInfoUsuario = findViewById(R.id.cardInfoUsuario);
+
+        // -- Listeners
+        cardControl.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, ControlActivity.class);
             intent.putExtra(EXTRA_USER_EMAIL, emailUsuarioLogueado);
             startActivity(intent);
         });
 
-        cardPatrones.setOnClickListener(view -> {
+        cardPatrones.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, PatronesActivity.class);
             intent.putExtra(EXTRA_USER_EMAIL, emailUsuarioLogueado);
             startActivity(intent);
         });
 
-        cardInfo.setOnClickListener(view -> {
-            Intent intent = new Intent(MenuActivity.this, InfoActivity.class);
+        cardInfo.setOnClickListener(v -> {
+            Intent intent = new Intent(MenuActivity.this, InformationActivity.class);
             intent.putExtra(EXTRA_USER_EMAIL, emailUsuarioLogueado);
             startActivity(intent);
         });
 
-        cardInfoUsuario.setOnClickListener(view -> {
-            Log.d("MENU_DEBUG", "Intentando abrir EditInformationActivity con email: " + emailUsuarioLogueado);
-            Toast.makeText(MenuActivity.this, "Botón Editar presionado", Toast.LENGTH_SHORT).show();
-
+        cardInfoUsuario.setOnClickListener(v -> {
             Intent intent = new Intent(MenuActivity.this, EditInformationActivity.class);
-            intent.putExtra(EditInformationActivity.EXTRA_USER_EMAIL, emailUsuarioLogueado);
+            intent.putExtra(EXTRA_USER_EMAIL, emailUsuarioLogueado);
             startActivity(intent);
         });
     }

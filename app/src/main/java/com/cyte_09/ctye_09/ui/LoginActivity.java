@@ -52,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnRegister = findViewById(R.id.btnRegister);
         cbRemember = findViewById(R.id.cbRemember);
-        tvForgotPassword = findViewById(R.id.tvForgotPassword);
         tvEliminarCuenta = findViewById(R.id.tvDeleteAccount);
 
         dbManager = new DbManager(this);
